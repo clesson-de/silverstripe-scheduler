@@ -1,0 +1,76 @@
+.scheduler-run-all {
+    padding: 12px 0;
+    margin: 0 0 12px 0;
+}
+
+.scheduler-run-all__trigger {
+    min-width: 220px;
+}
+
+.scheduler-run-all__progress {
+    margin-top: 12px;
+}
+
+.scheduler-run-all__row {
+    display: flex;
+    align-items: center;
+}
+
+.scheduler-run-all__bar {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.scheduler-run-all__segments {
+    display: flex;
+    width: 100%;
+    height: 18px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.scheduler-run-all__segment {
+    position: relative;
+    height: 100%;
+    border-right: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.scheduler-run-all__segment:last-child {
+    border-right: none;
+}
+
+.scheduler-run-all__segment.is-active {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.scheduler-run-all__segment.is-error .scheduler-run-all__fill {
+    background: #dc3545 !important;
+}
+
+.scheduler-run-all__fill {
+    height: 100%;
+    width: 0%;
+    transition: width .2s linear;
+}
+
+.scheduler-run-all .scheduler-run-all__status {
+    display: block;
+    margin: 10px 0 0 0;
+    padding-top: 10px;
+    font-size: 0.85em;
+    color: #015489;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+.scheduler-row-active > td {
+    background-color: #fff3cd !important;
+    transition: background-color .2s ease;
+}
+.scheduler-row-active {
+    box-shadow: inset 3px 0 0 #ffc107;
+}

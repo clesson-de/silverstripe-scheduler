@@ -1,0 +1,31 @@
+{
+    "name": "clesson-de/silverstripe-scheduler",
+    "description": "Zentralisierter Scheduler für Silverstripe 6 — verwaltet mehrere BuildTasks in einem einzigen Cron-Job.",
+    "type": "silverstripe-vendormodule",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kai Feldmaier",
+            "email": "kai.feldmaier@clesson.de",
+            "homepage": "https://clesson.de"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "silverstripe/framework": "^6.0",
+        "silverstripe/admin": "^3.0",
+        "dragonmantank/cron-expression": "^3.3",
+        "symfony/process": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Clesson\\Silverstripe\\Scheduler\\": "src/"
+        }
+    },
+    "extra": {
+        "expose": [
+            "client/dist"
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+.scheduler-runnow-action--busy {
+    opacity: 0.7;
+    cursor: wait !important;
+}
+
+.scheduler-runnow-action--success {
+    color: #2ecc71 !important;
+}
+
+.scheduler-runnow-action--error {
+    color: #e74c3c !important;
+}
