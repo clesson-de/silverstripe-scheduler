@@ -18,7 +18,7 @@ use Symfony\Component\Process\Process;
 /**
  * Orchestrates the periodic run of all due ScheduledJobs.
  *
- * Each job is executed in an isolated subprocess (`sake dev/tasks/scheduled-job-execute`)
+ * Each job is executed in an isolated subprocess (`sake tasks:scheduled-job-execute`)
  * so that a failing or hanging job cannot block subsequent jobs.
  *
  * @package Clesson\Silverstripe\Scheduler
@@ -215,7 +215,7 @@ class JobRunnerService
         // can return immediately. Output is redirected to a log file to keep
         // stdout/stderr from being tied to the parent process.
         $command = sprintf(
-            'nohup %s dev/tasks/scheduled-job-execute --jobID=%d --runID=%d > %s 2>&1 &',
+            'nohup %s tasks:scheduled-job-execute --jobID=%d --runID=%d > %s 2>&1 &',
             escapeshellcmd($sake),
             (int) $job->ID,
             (int) $run->ID,
@@ -265,7 +265,7 @@ class JobRunnerService
         $sake = $this->resolveSakeBinary();
         $runOpt = $runId > 0 ? ' --runID=' . $runId : '';
         return sprintf(
-            '%s dev/tasks/scheduled-job-execute --jobID=%d%s 2>&1',
+            '%s tasks:scheduled-job-execute --jobID=%d%s 2>&1',
             escapeshellcmd($sake),
             (int) $job->ID,
             $runOpt

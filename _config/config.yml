@@ -1,0 +1,20 @@
+---
+Name: clesson-scheduler
+---
+
+Clesson\Silverstripe\Scheduler\Services\JobRunnerService:
+  # Maximum wall-clock seconds we wait for a subprocess before killing it.
+  # This is a safety net; each job may also define its own MaxRuntimeSeconds.
+  default_subprocess_timeout: 900
+
+  # Absolute path to the "sake" binary or the project root. If empty the
+  # service tries to auto-detect $BASE_PATH/vendor/bin/sake.
+  sake_binary: ''
+
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - clesson-de/silverstripe-scheduler:client/dist/RunNowButton.js
+    - clesson-de/silverstripe-scheduler:client/dist/RunAllButton.js
+  extra_requirements_css:
+    - clesson-de/silverstripe-scheduler:client/dist/RunNowButton.css
+    - clesson-de/silverstripe-scheduler:client/dist/RunAllButton.css

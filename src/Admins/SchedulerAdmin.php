@@ -53,6 +53,11 @@ class SchedulerAdmin extends SingleRecordAdmin
     /**
      * @config
      */
+    private static float $menu_priority = -1.1;
+
+    /**
+     * @config
+     */
     private static string $menu_icon_class = 'font-icon-clock';
 
     /**

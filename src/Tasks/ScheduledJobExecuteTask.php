@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * Called by JobRunnerService as a subprocess, so any failure/timeout of the
  * inner task is fully isolated from the master runner and other jobs.
  *
- * Usage: sake dev/tasks/scheduled-job-execute jobID=42
+ * Usage: sake tasks:scheduled-job-execute --jobID=42
  *
  * @package Clesson\Silverstripe\Scheduler
  * @subpackage Tasks
