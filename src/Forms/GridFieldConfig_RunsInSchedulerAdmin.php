@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Clesson\Silverstripe\Scheduler\Forms;
 
+use Clesson\Silverstripe\Constants\GridFieldToolbarLayout;
+use Clesson\Silverstripe\Forms\GridField\GridFieldSearch;
+use Clesson\Silverstripe\Forms\GridField\GridFieldToolbar;
 use Clesson\Silverstripe\Scheduler\Constants\JobStatus;
+use Clesson\Silverstripe\Scheduler\Forms\GridField\GridFieldFilter_RunStatus;
 use Clesson\Silverstripe\Scheduler\Models\ScheduledJobRun;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -31,6 +35,7 @@ class GridFieldConfig_RunsInSchedulerAdmin extends GridFieldConfig
     {
         parent::__construct();
 
+        $this->addToolbar();
         $this->addComponent(GridFieldSortableHeader::create());
         $this->addComponent($dataColumns = GridFieldDataColumns::create());
         $this->addComponent(GridFieldViewButton::create());
@@ -71,5 +76,18 @@ class GridFieldConfig_RunsInSchedulerAdmin extends GridFieldConfig
 
         $this->addComponent(GridFieldDetailForm::create(null, $showPagination, $showAdd));
         $this->extend('updateConfig');
+    }
+
+    /** Adds a compact search without exposing creation of runner-owned history records. */
+    private function addToolbar(): void
+    {
+        $toolbar = GridFieldToolbar::install($this);
+        $search = $toolbar->addItem('search', GridFieldToolbarLayout::LEFT, GridFieldToolbarLayout::CONTENT);
+        $this->addComponent(GridFieldSearch::create(
+            ['Job.TaskClass', 'Job.Description', 'Output', 'ErrorOutput'],
+            $search->getFragment()
+        ));
+        $status = $toolbar->addItem('status', GridFieldToolbarLayout::LEFT, GridFieldToolbarLayout::CONTENT);
+        $this->addComponent(GridFieldFilter_RunStatus::create($status->getFragment()));
     }
 }

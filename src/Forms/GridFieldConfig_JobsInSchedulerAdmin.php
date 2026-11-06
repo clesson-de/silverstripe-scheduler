@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Clesson\Silverstripe\Scheduler\Forms;
 
+use Clesson\Silverstripe\Constants\GridFieldToolbarLayout;
+use Clesson\Silverstripe\Forms\GridField\GridFieldSearch;
+use Clesson\Silverstripe\Forms\GridField\GridFieldToolbar;
 use Clesson\Silverstripe\Scheduler\Constants\JobStatus;
 use Clesson\Silverstripe\Scheduler\Forms\GridField\GridFieldAction_RunNow;
 use Clesson\Silverstripe\Scheduler\Models\ScheduledJob;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
@@ -35,8 +37,7 @@ class GridFieldConfig_JobsInSchedulerAdmin extends GridFieldConfig
     {
         parent::__construct();
 
-        $this->addComponent(GridFieldButtonRow::create('before'));
-        $this->addComponent(GridFieldAddNewButton::create('buttons-before-right'));
+        $this->addToolbar();
         $this->addComponent(GridFieldSortableHeader::create());
         $this->addComponent($dataColumns = GridFieldDataColumns::create());
         $this->addComponent(GridFieldAction_RunNow::create());
@@ -103,5 +104,14 @@ class GridFieldConfig_JobsInSchedulerAdmin extends GridFieldConfig
 
         $this->addComponent(GridFieldDetailForm::create(null, $showPagination, $showAdd));
         $this->extend('updateConfig');
+    }
+
+    /** Places the shared task/description search on the left and the existing creation action on the right. */
+    private function addToolbar(): void
+    {
+        $toolbar = GridFieldToolbar::install($this);
+        $search = $toolbar->addItem('search', GridFieldToolbarLayout::LEFT, GridFieldToolbarLayout::CONTENT);
+        $this->addComponent(GridFieldSearch::create(['TaskClass', 'Description'], $search->getFragment()));
+        $this->addComponent(GridFieldAddNewButton::create('buttons-before-right'));
     }
 }

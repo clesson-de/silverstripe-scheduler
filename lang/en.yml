@@ -1,4 +1,6 @@
 en:
+  Clesson\Silverstripe\Scheduler\Forms\GridField\GridFieldFilter_RunStatus:
+    ALL_STATUSES: 'All statuses'
   Clesson\Silverstripe\Scheduler\Models\SchedulerConfig:
     TITLE: 'Scheduler'
     JOBS: 'Jobs'

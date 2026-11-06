@@ -13,6 +13,14 @@ dadurch keine nachfolgenden Jobs.
 
 ## Features
 
+- **Job toolbar** with a compact search on the left and the add button on the
+  right. Searches task class names and descriptions; Enter submits the search,
+  X clears and submits it. Existing list restrictions and sorting remain active.
+- **History toolbar** with a left-aligned search over task class names, job
+  descriptions, output and error output. Uses the same Enter/X controls and
+  retains the existing history limit and sorting. A status dropdown combines
+  with the search to show successful or failed runs; "All statuses" removes
+  this restriction and includes running, pending, skipped and timed-out runs.
 - **CMS-Verwaltung** über `SingleRecordAdmin` — kein `ModelAdmin`.
 - **Benutzerfreundlicher Cron-Editor** (`CronScheduleField`) mit Presets
   (alle X Minuten / stündlich / täglich / wöchentlich / monatlich),
@@ -45,13 +53,13 @@ dadurch keine nachfolgenden Jobs.
 
 ```bash
 composer require clesson-de/silverstripe-scheduler
-sake dev/build flush=all
+sake db:build --flush
 ```
 
 Server-Cron (Beispiel alle 5 Minuten):
 
 ```
-*/5 * * * * /path/to/project/vendor/bin/sake scheduler-run >/dev/null 2>&1
+*/5 * * * * /path/to/project/vendor/bin/sake tasks:scheduler-run >/dev/null 2>&1
 ```
 
 ---
@@ -100,7 +108,7 @@ müssen.
 ## Architektur
 
 ```
-Server-Cron  ──►  sake scheduler-run
+Server-Cron  ──►  sake tasks:scheduler-run
                        │
                        ▼
                   SchedulerRunTask
@@ -111,7 +119,7 @@ Server-Cron  ──►  sake scheduler-run
                        ├─► globaler File-Lock
                        │
                        ├─► für jeden fälligen Job:
-                       │     subprocess: sake scheduled-job-execute --jobID=X [--runID=Y]
+                       │     subprocess: sake tasks:scheduled-job-execute --jobID=X [--runID=Y]
                        │        │
                        │        ▼
                        │     ScheduledJobExecuteTask
@@ -158,8 +166,8 @@ silverstripe-scheduler/
     │   ├── JobRunnerService.php
     │   └── GermanHolidays.php
     └── Tasks/
-        ├── SchedulerRunTask.php          # command: scheduler-run
-        └── ScheduledJobExecuteTask.php   # command: scheduled-job-execute
+        ├── SchedulerRunTask.php          # command: tasks:scheduler-run
+        └── ScheduledJobExecuteTask.php   # command: tasks:scheduled-job-execute
 ```
 
 ---
@@ -172,8 +180,12 @@ Besonderheiten:
 ### BuildTask ist SS6-API
 
 - `protected static string $commandName` (**nicht** `$segment`, das ist
-  SS4/5-Legacy). Ohne `$commandName` wird die Task nicht als
-  Symfony-Command registriert und `sake dev/tasks/…` findet sie nicht.
+  SS4/5-Legacy) legt den Task-Namen fest. Silverstripe ergänzt für die CLI
+  automatisch das Präfix `tasks:`: aus `$commandName = 'scheduler-run'`
+  wird `sake tasks:scheduler-run`. Das Präfix gehört nicht in `$commandName`.
+  Ohne `$commandName` wird der Name aus dem vollständigen Klassennamen
+  abgeleitet. Die CLI-Beispiele verwenden den kanonischen Namen mit `tasks:`
+  statt des Browser-Pfads `dev/tasks/…`.
 - Signatur ist `run(InputInterface $input, PolyOutput $output): int`.
   Wer eine Ziel-Task innerhalb einer eigenen Task ausführt, muss
   `BufferedOutput` in ein `PolyOutput` wrappen:
@@ -191,15 +203,15 @@ ganzen String als Command-Namen interpretieren:
 
 ```php
 // FALSCH:
-sprintf('%s "dev/tasks/scheduled-job-execute --jobID=%d"', $sake, $id);
+sprintf('%s "tasks:scheduled-job-execute --jobID=%d"', $sake, $id);
 // RICHTIG:
-sprintf('%s scheduled-job-execute --jobID=%d', $sake, $id);
+sprintf('%s tasks:scheduled-job-execute --jobID=%d', $sake, $id);
 ```
 
 Detached-Aufrufe laufen als:
 
 ```
-nohup <sake> scheduled-job-execute --jobID=X --runID=Y > /tmp/…log 2>&1 &
+nohup <sake> tasks:scheduled-job-execute --jobID=X --runID=Y > /tmp/…log 2>&1 &
 ```
 
 `Process::run()` kehrt sofort zurück, weil die Shell forkt und exit't.
